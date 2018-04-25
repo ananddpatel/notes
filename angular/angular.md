@@ -17,7 +17,7 @@ export class ViewMoreComponent implements OnInit {
 
   ngOnInit() {this.sliced = this.list.slice(0, this.limit);}
   onClick() {
-    this.sliced = !this.expanded ? this.sliced = this.list : this.sliced = this.list.slice(0, this.limit);
+    this.sliced = !this.expanded ? this.list : this.list.slice(0, this.limit);
     this.expanded = !this.expanded;
   }
 }
@@ -25,7 +25,7 @@ export class ViewMoreComponent implements OnInit {
 
 usecase:
 ```html
-<some-list *ngFor="let f of more.sliced" [file]="f"></some-list>
+<some-list *ngFor="let f of more.sliced"></some-list>
 <viewmore #more [limit]="3" [list]="files"></viewmore>
 ```
 templateRef sliced avoids using output, eventhandler, and storing lengths -> delegates that to the viewmore component
