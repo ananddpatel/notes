@@ -28,7 +28,7 @@ addBurger$: Observable<any> = this.actions$
 
 ### Dispatch mulitple Actions from effect
 ```ts
-removeBurger$: Observable<any> = this.actions$
+addBurger$: Observable<any> = this.actions$
 .ofType('[Menu Page] Add burger')
 .switchMap((action: menuActions.AddBurger | details.AddBurger) => {
     const p = action.payload;
@@ -38,7 +38,7 @@ removeBurger$: Observable<any> = this.actions$
         new burgers.BurgerAddSuccess('Burger was successfully added.')
     ])
     .catch(err => {
-        return of(new tasks.DeleteTaskFail(err.statusCode));
+        return of(new tasks.BurgerAddFail(err.statusCode));
     });
 }))
 ```
