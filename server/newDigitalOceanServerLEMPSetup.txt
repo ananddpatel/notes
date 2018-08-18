@@ -1,0 +1,98 @@
+as root:
+
+apt-get update
+apt-get upgrade
+
+newuser {new_user=anand}
+usermod -aG sudo anand
+id anand
+sudo su - anand
+
+=== INSTALL NGINX ===
+
+sudo apt-get install nginx
+sudo ufw allow 'Nginx HTTP'
+sudo ufw status
+
+go to: http://server_domain_or_IP to see if nginx default page shows
+
+=== INSTALL MYSQL ===
+
+sudo apt-get install mysql-server
+
+=== INSTALL PHP ===
+
+sudo apt-get install vim
+sudo apt-get install php-fpm php-mysql
+sudo vim /etc/php/7.0/fpm/php.ini
+	@ line 760 change and uncomment cgi.fix_pathinfo=1 to cgi.fix_pathinfo=0
+sudo systemctl restart php7.0-fpm
+sudo vim /etc/nginx/sites-available/default
+	the first server block should look like:
+
+	server {
+	    listen 80 default_server;
+	    listen [::]:80 default_server;
+
+	    root /var/www/html;
+	    index index.php index.html index.htm index.nginx-debian.html;
+
+	    server_name server_domain_or_IP;
+
+	    location / {
+	        try_files $uri $uri/ =404;
+	    }
+
+	    location ~ \.php$ {
+	        include snippets/fastcgi-php.conf;
+	        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+	    }
+
+	    location ~ /\.ht {
+	        deny all;
+	    }
+	}
+
+sudo nginx -t // to test syntax
+sudo systemctl reload nginx
+
+=== TEST IF ITS ALL WORKING ===
+
+sudo nano /var/www/html/info.php
+	<?php
+		phpinfo();
+
+http://server_domain_or_IP/info.php
+sudo rm /var/www/html/info.php
+
+=== INSTALL COMPOSER === 
+
+follow install instructions on https://getcomposer.org/download/
+sudo mv composer.phar /usr/local/bin/composer
+
+=== SETUP PROJECT ===
+cd /var/www/html/
+sudo rm index.nginx-debian.html
+
+// swap space
+sudo fallocate -l 1G /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+
+git clone <git remote>
+cd <project name>
+sudo chown -R <username> ./
+sudo chown -R :www-data /var/www/html/<project name>
+sudo chmod -R 775 /var/www/html/<project name>/storage
+
+// install composer dependancies
+sudo apt-get install php7.0-mbstring php7.0-xml composer unzip
+composer install
+
+mysql -u root -p
+create database <project name>;
+
+// write all proper .env configurateions
+sudo vim .env
+
+php aritsan migrate
