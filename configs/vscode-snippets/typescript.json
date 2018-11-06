@@ -1,0 +1,28 @@
+{
+	"Redux Load Actions": {
+		"prefix": "rla",
+		"body": [
+			"export const LOAD_$2 = '[$1] Load $1';",
+			"export const LOAD_$2_SUCCESS = '[$1] Load $1 Success';",
+			"export const LOAD_$2_Fail = '[$1] Load $1 Fail';",
+			"",
+			"export class Load$1 implements Action {",
+			"  readonly type = LOAD_$2;",
+			"}",
+			"",
+			"export class Load$1Success implements Action {",
+			"  readonly type = LOAD_$2_SUCCESS;",
+			"  constructor(public message: string) {}",
+			"}",
+			"",
+			"export class Load$1Fail implements Action {",
+			"  readonly type = LOAD_$2_Fail;",
+			"  constructor(public message: string) {}",
+			"}",
+			"",
+      "Load$1 | Load$1Success | Load$1Fail",
+      "$0"
+		],
+		"description": "Redux Load data actions"
+	}
+}
